@@ -1,51 +1,34 @@
-const express = require('express');
-const app = express();
-const handlebars = require('express-handlebars')
-        .create({ defaultLayout: 'main' });
-const fortune = require('./lib/fortune');
+const express = require('express')
+const expressHandlebars = require('express-handlebars')
 
-app.engine('handlebars', handlebars.engine);
+const handlers = require('./lib/handlers')
+
+const app = express()
+
+
+app.engine('handlebars', expressHandlebars({
+    defaultLayout: 'main'
+}))
 app.set('view engine', 'handlebars');
 
-app.set('port', process.env.PORT || 3000);
+const port = process.env.PORT || 3000
 
 app.use(express.static(__dirname + '/public'));
 
-app.use(function(req, res, next) {
-    res.locals.showTests = app.get('env') !== 'production' && req.query.test === '1';
-    next();
-});
+app.get('/', handlers.home);
 
-app.get('/', function(req, res) {
-    res.render('home');
-});
+app.get('/about', handlers.about);
 
-app.get('/about', function(req, res) {
-    res.render('about', {
-        fortune: fortune.getFortune(),
-        pageTestScript: '/qa/tests-about.js' 
-    });
-});
+// Пользовательская страница 404
+app.use(handlers.notFound);
 
-app.get('/products/tyrannofex', function(req, res) {
-    res.render('products/tyrannofex');
-});
+// Пользовательская страница 500
+app.use(handlers.serverError);
 
-app.get('/products/request-item-price', function(req, res) {
-    res.render('products/request-item-price');
-});
-
-app.use(function(req, res, next) {
-    res.status(404);
-    res.render('404');
-});
-
-app.use(function(err, req, res, next) {
-    console.error(err.stack);
-    res.status(500);
-    res.render('500');
-});
-
-app.listen(app.get('port'), function() {
-    console.log(`Express запущен на http://localhost:${app.get('port')}; Нажмите Ctrl+C для завершения.`);
-});
+if (require.main === module) {
+    app.listen(port, () => {
+        console.log(`Express запущен на http://localhost:${port}; Нажмите Ctrl+C для завершения.`);
+    })
+} else {
+    module.exports = app
+}
