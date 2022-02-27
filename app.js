@@ -1,12 +1,12 @@
 const express = require('express')
-const expressHandlebars = require('express-handlebars')
+const { engine } = require('express-handlebars')
 
 const handlers = require('./lib/handlers')
 
 const app = express()
 
 
-app.engine('handlebars', expressHandlebars({
+app.engine('handlebars', engine({
     defaultLayout: 'main'
 }))
 app.set('view engine', 'handlebars');
