@@ -5,10 +5,13 @@ const handlers = require('./lib/handlers')
 
 const app = express()
 
+app.use(express.urlencoded({extended: false}))
+app.use(express.json())
 
 app.engine('handlebars', engine({
     defaultLayout: 'main'
 }))
+
 app.set('view engine', 'handlebars');
 
 const port = process.env.PORT || 3000
@@ -18,6 +21,10 @@ app.use(express.static(__dirname + '/public'));
 app.get('/', handlers.home);
 
 app.get('/about', handlers.about);
+
+app.get('/newsletter-signup', handlers.newsletterSignup)
+app.post('/newsletter-signup/process', handlers.newsletterSignupProcess)
+app.get('/newsletter-signup/thank-you', handlers.newsletterSignupThankYou)
 
 // Пользовательская страница 404
 app.use(handlers.notFound);
