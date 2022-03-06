@@ -1,6 +1,8 @@
 const express = require('express')
 const { engine } = require('express-handlebars')
 
+const multiparty = require('multiparty')
+
 const handlers = require('./lib/handlers')
 
 const app = express()
@@ -26,6 +28,14 @@ app.get('/newsletter', handlers.newsletter)
 app.get('/newsletter-signup', handlers.api.newsletterSignup)
 app.post('/newsletter-signup/process', handlers.newsletterSignupProcess)
 app.get('/newsletter-signup/thank-you', handlers.newsletterSignupThankYou)
+
+app.post('/contest/miniatyres-compendium/:year/:month', (req, res) => {
+    const form = new multiparty.Form()
+    form.parse(req, (err, fields, files) => {
+        if(err) return res.status(500).send({ error: err.message })
+        handlers.miniatyresCompendiumContestProcess(req, res, fields, files)
+    })
+})
 
 // Пользовательская страница 404
 app.use(handlers.notFound);
