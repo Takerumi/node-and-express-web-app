@@ -22,7 +22,8 @@ app.get('/', handlers.home);
 
 app.get('/about', handlers.about);
 
-app.get('/newsletter-signup', handlers.newsletterSignup)
+app.get('/newsletter', handlers.newsletter)
+app.get('/newsletter-signup', handlers.api.newsletterSignup)
 app.post('/newsletter-signup/process', handlers.newsletterSignupProcess)
 app.get('/newsletter-signup/thank-you', handlers.newsletterSignupThankYou)
 
