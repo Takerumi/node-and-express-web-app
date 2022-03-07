@@ -1,13 +1,15 @@
 const express = require('express')
 const { engine } = require('express-handlebars')
 const multiparty = require('multiparty')
-
+const cookieParser = require('cookie-parser')
 const handlers = require('./lib/handlers')
+const credentials = require('./credentials')
 
 const app = express()
 
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
+app.use(cookieParser(credentials.cookieSecret))
 
 app.engine('handlebars', engine({
     defaultLayout: 'main',

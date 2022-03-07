@@ -11,6 +11,7 @@
   "author": "Anastasiya Ermolenko",
   "license": "ISC",
   "dependencies": {
+    "cookie-parser": "^1.4.6",
     "express": "^4.17.3",
     "express-handlebars": "^6.0.2"
   },
